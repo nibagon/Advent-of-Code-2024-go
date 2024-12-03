@@ -27,19 +27,29 @@ func run(part2 bool, input string) any {
 	print("I found muls:")
 	println(len(data))
 	sum := 0
+	// number:=0
 	for _, line := range data {
 		counter := 0
 		first_number := 0
-		for _, element := range strings.Split(line, "") {
-			i, err := strconv.Atoi(element)
-			if err != nil {
-				// ... handle error
-				continue
+		for _, commas := range strings.Split(line, ",") {
+			// println(commas)
+
+			number := ""
+			for _, digits := range strings.Split(commas, "") {
+				_, err := strconv.Atoi(digits)
+				if err != nil {
+					// ... handle error
+					// preveousNum=false
+					continue
+				}
+				number += digits
 			}
+			i, _ := strconv.Atoi(number)
 			if counter == 0 {
 				first_number = i
 				counter++
 			} else if counter == 1 {
+				i, _ = strconv.Atoi(number)
 				mul := i * first_number
 				print("mul ")
 				println(i, first_number)
@@ -48,6 +58,7 @@ func run(part2 bool, input string) any {
 			} else {
 				counter = 0
 			}
+			number = ""
 		}
 	}
 	print("sum =")
