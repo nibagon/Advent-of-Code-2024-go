@@ -29,10 +29,14 @@ func run(part2 bool, input string) any {
 	at_most_three := 3
 
 	data := strings.Split(input, "\n")
-
+	unsafe_count := 0
+	total_count := 0
 	for _, line := range data {
 		columns := strings.SplitN(line, " ", len(line))
 		preveous := 0
+		increasing_flag := false
+		count := 0
+
 		for _, numbers := range columns {
 			i, err := strconv.Atoi(numbers)
 			if err != nil {
@@ -48,18 +52,50 @@ func run(part2 bool, input string) any {
 				print(diff)
 				if math.Abs(float64(diff)) > float64(at_most_three) {
 					println("_Unsafe_")
+					unsafe_count++
 					break
 				} else if math.Abs(float64(diff)) < float64(at_least_one) {
 					println("_Unsafe_")
+					unsafe_count++
 					break
 				} else {
 					println("_Safe_")
 				}
+				if count == 1 {
+					if diff > 0 {
+						increasing_flag = false
+					} else {
+						increasing_flag = true
+					}
+				} else if count > 1 {
+					if diff > 0 && !increasing_flag {
+						print(diff)
+						print("=")
+						print(increasing_flag)
+						println("_Safe_")
+					} else if diff < 0 && increasing_flag {
+						print(diff)
+						print("=")
+						print(increasing_flag)
+						println("_Safe_")
+					} else {
+						print(diff)
+						print("=")
+						print(increasing_flag)
+						println("_Unsafe_")
+						unsafe_count++
+						break
+					}
+				}
 			}
 			preveous = i
-
+			count++
 		}
+		total_count++
 		//
 	}
+	println("there were", total_count, "events in total")
+	println("there were", unsafe_count, "_Unsafe_")
+	println("there were", total_count-unsafe_count, "_Safe_")
 	return 42
 }
